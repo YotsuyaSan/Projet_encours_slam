@@ -47,6 +47,8 @@ public class Joueur {
     if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
       coordY -= vitesse;
     }
+    coordX =  Gdx.input.getX() - 15;
+    coordY = Gdx.graphics.getHeight() - Gdx.input.getY() - 15;
 
     // Coordonnées ont potentiellement changé
     // => Mise à jour zone de "hit"
@@ -55,7 +57,7 @@ public class Joueur {
 
   private void forcerAResterDansLeCadre() {
     // Gestion bordure droite
-    if (coordX + longueurEffective > longueurFenetre) {
+/*     if (coordX + longueurEffective > longueurFenetre) {
       coordX = longueurFenetre - longueurEffective;
     }
 
@@ -73,7 +75,7 @@ public class Joueur {
     if (coordY < 0) {
       coordY = 0;
     }
-
+ */
     // Coordonnées ont potentiellement changé
     // => Mise à jour zone de "hit"
     zoneDeHit.setPosition(coordX, coordY);
