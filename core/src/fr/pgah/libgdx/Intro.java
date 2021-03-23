@@ -1,6 +1,7 @@
 package fr.pgah.libgdx;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -10,7 +11,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Intro extends ApplicationAdapter {
 
-  final int NB_SPRITES = 5;
+  final int NB_SPRITES = 2;
   SpriteBatch batch;
   int longueurFenetre;
   int hauteurFenetre;
@@ -18,6 +19,7 @@ public class Intro extends ApplicationAdapter {
   Joueur joueur;
   boolean gameOver;
   Texture gameOverTexture;
+  Cursor cursor;
 
   @Override
   public void create() {
@@ -27,9 +29,10 @@ public class Intro extends ApplicationAdapter {
 
     gameOver = false;
     gameOverTexture = new Texture("game_over.png");
-
+    cursor = new Cursor();
     initialisationSprites();
-    initialiserJoueur();
+  //  initialiserJoueur();
+    cursor.initCursor();
   }
 
   private void initialisationSprites() {
@@ -41,19 +44,23 @@ public class Intro extends ApplicationAdapter {
 
   private void initialiserJoueur() {
     joueur = new Joueur();
+    Gdx.input.setCursorCatched(true);
+
   }
 
   @Override
   public void render() {
     // gameOver est mis à TRUE dès qu'un "hit" est repéré
+    
     if (!gameOver) {
       reinitialiserArrierePlan();
+      cursor.setCoordsCursor();
       majEtatProtagonistes();
-      majEtatJeu();
+   //   majEtatJeu();
       dessiner();
+      
     }
   }
-
 
   private void reinitialiserArrierePlan() {
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -63,9 +70,19 @@ public class Intro extends ApplicationAdapter {
     // Sprites
     for (Sprite sprite : sprites) {
       sprite.majEtat();
+      Iterator<Sprite> i = sprites.iterator();
+      while (i.hasNext()) {
+        Sprite s = i.next(); // must be called before you can call i.remove()
+      if(cursor.estEnCollisionAvec(s)){
+        i.remove();
+      }
     }
+  }
     // Joueur
-    joueur.majEtat();
+/*     if(cursor.estEnCollisionAvec(sprites)){
+      gameOver=true;
+    } */
+ //   joueur.majEtat();
   }
 
   private void majEtatJeu() {
@@ -87,7 +104,7 @@ public class Intro extends ApplicationAdapter {
       for (Sprite sprite : sprites) {
         sprite.dessiner(batch);
       }
-      joueur.dessiner(batch);
+ //     joueur.dessiner(batch);
     }
     batch.end();
   }

@@ -103,6 +103,9 @@ public class Sprite {
     zoneDeHit.setPosition(coordX, coordY);
 
   }
+  public void hitByCursor(){
+    
+  }
 
   public void dessiner(SpriteBatch batch) {
     batch.draw(img, coordX, coordY,
