@@ -1,7 +1,6 @@
 package fr.pgah.libgdx;
 
 import java.util.ArrayList;
-
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -14,8 +13,9 @@ public class Intro extends ApplicationAdapter {
   SpriteBatch batch;
   int longueurFenetre;
   int hauteurFenetre;
-  ArrayList<Sprite> sprites;
-  Joueur joueur;
+  // ArrayList<Sprite> sprites;
+  // Joueur joueur;
+  ArrayList<Protagoniste> protagonistes;
   boolean gameOver;
   Texture gameOverTexture;
 
@@ -28,19 +28,20 @@ public class Intro extends ApplicationAdapter {
     gameOver = false;
     gameOverTexture = new Texture("game_over.png");
 
+    protagonistes = new ArrayList<>();
     initialisationSprites();
     initialiserJoueur();
   }
 
   private void initialisationSprites() {
-    sprites = new ArrayList<>();
     for (int i = 0; i < NB_SPRITES; i++) {
-      sprites.add(new Sprite("flush.png"));
+      protagonistes.add(new Sprite("chien.png"));
     }
   }
 
   private void initialiserJoueur() {
-    joueur = new Joueur();
+    // joueur = new Joueur();
+    protagonistes.add(new Joueur());
   }
 
   @Override
@@ -54,25 +55,41 @@ public class Intro extends ApplicationAdapter {
     }
   }
 
-
   private void reinitialiserArrierePlan() {
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
   }
 
   private void majEtatProtagonistes() {
-    // Sprites
-    for (Sprite sprite : sprites) {
-      sprite.majEtat();
+
+    for (Protagoniste p : protagonistes) {
+      p.majEtat();
     }
-    // Joueur
-    joueur.majEtat();
+
+    // // Sprites
+    // for (Sprite sprite : sprites) {
+    // sprite.majEtat();
+    // }
+
+    // // Joueur
+    // joueur.majEtat();
   }
 
   private void majEtatJeu() {
     // On vérifie si le jeu continue ou pas
-    if (joueur.estEnCollisionAvec(sprites)) {
-      gameOver = true;
+    for(Protagoniste p : protagonistes){
+      if(p instanceof Joueur){
+        for(Protagoniste sprite : protagonistes){
+          if(sprite instanceof Sprite){
+            if(p.estEnCollisonAvec(sprite)){
+              gameOver = true;
+            }
+          }
+        }
+      }
     }
+/*     if (joueur.estEnCollisionAvec(sprites)) {
+      gameOver = true;
+    } */
   }
 
   private void dessiner() {
@@ -84,10 +101,13 @@ public class Intro extends ApplicationAdapter {
       batch.draw(gameOverTexture, 100, 100);
     } else {
       // Affichage "normal", jeu en cours
-      for (Sprite sprite : sprites) {
-        sprite.dessiner(batch);
+      // for (Sprite sprite : sprites) {
+      // sprite.dessiner(batch);
+      // }
+      // joueur.dessiner(batch);
+      for (Protagoniste p : protagonistes) {
+        p.dessiner(batch);
       }
-      joueur.dessiner(batch);
     }
     batch.end();
   }

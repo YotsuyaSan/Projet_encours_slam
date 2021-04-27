@@ -6,23 +6,14 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 
-public class Sprite {
+public class Sprite extends Protagoniste {
 
-  int longueurFenetre;
-  int hauteurFenetre;
-  Texture img;
-  int coordX;
-  int coordY;
   boolean versLaDroite;
   boolean versLeHaut;
   double facteurTaille;
-  int vitesse;
   float rotation;
   int vitesseRotation;
-  int longueurEffective;
-  int hauteurEffective;
   Random generateurAleatoire;
-  Rectangle zoneDeHit;
 
   public Sprite(String img) {
     // On pourrait aussi copier tout le contenu de la méthode ici
@@ -35,7 +26,7 @@ public class Sprite {
 
     generateurAleatoire = new Random();
     this.img = new Texture(img);
-    facteurTaille = 0.2;
+    facteurTaille = 1;
     vitesse = 1 + generateurAleatoire.nextInt(10);
     rotation = 0;
     vitesseRotation = 5 + generateurAleatoire.nextInt(21);
@@ -48,17 +39,11 @@ public class Sprite {
     zoneDeHit = new Rectangle(coordX, coordY, longueurEffective, hauteurEffective);
   }
 
-  public void majEtat() {
-    deplacer();
-    pivoter();
-    forcerAResterDansLeCadre();
-  }
-
   public void pivoter() {
     rotation += vitesseRotation;
   }
 
-  public void deplacer() {
+  protected void deplacer() {
     if (versLaDroite) {
       coordX += vitesse;
     } else {
@@ -70,8 +55,7 @@ public class Sprite {
       coordY -= vitesse;
     }
 
-    // Coordonnées modifiées => Mise à jour de la zone de "hit"
-    zoneDeHit.setPosition(coordX, coordY);
+    majZoneDeHit();
   }
 
   public void forcerAResterDansLeCadre() {
